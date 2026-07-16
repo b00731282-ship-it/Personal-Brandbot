@@ -11,7 +11,8 @@ set -euo pipefail
 export PATH="/home/agent/.local/bin:/usr/local/bin:/usr/bin:/bin"
 
 # Garde-fou fuseau : on ne tourne qu'à 8h heure de Paris.
-if [ "$(TZ=Europe/Paris date +%H)" != "08" ]; then
+# --force (répétition générale, test manuel) court-circuite le garde-fou.
+if [ "${1:-}" != "--force" ] && [ "$(TZ=Europe/Paris date +%H)" != "08" ]; then
   echo "[heartbeat] $(date -u '+%F %T') UTC : pas 8h à Paris, on passe."
   exit 0
 fi
