@@ -112,6 +112,10 @@ Charge une compétence uniquement quand elle est pertinente pour la demande.
 
 Important : charger une compétence ajoute des instructions de travail, mais ne crée pas de nouveaux outils. Tous les outils disponibles restent accessibles, qu'une compétence soit active ou non.
 
+## Heartbeat hebdomadaire
+
+Un cron système (crontab de l'utilisateur `agent` sur le VPS) lance `scripts/heartbeat.sh` chaque **vendredi à 8h heure de Paris** : veille des 7 derniers jours, article de la semaine (règles de CLAUDE.md), contrôle qualité, brouillon Substack, notification Telegram avec le lien d'édition. Le prompt exécuté est dans `scripts/heartbeat_prompt.md`. Les logs sont dans `logs/heartbeat.log`. Le brouillon n'est jamais publié : l'utilisateur relit et publie.
+
 ## Utilisation des outils
 
 | Outil | Commande | Rôle |
