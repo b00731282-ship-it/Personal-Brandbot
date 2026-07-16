@@ -29,7 +29,7 @@ fi
 echo "[heartbeat] $(date -u '+%F %T') UTC : démarrage du cycle hebdomadaire."
 
 claude -p "$(cat scripts/heartbeat_prompt.md)" \
-  --allowedTools "Read,Glob,Grep,Write,Edit,WebFetch,WebSearch,Bash(node:*),mcp__plugin_telegram_telegram__reply" \
+  --allowedTools "Read,Glob,Grep,Write,Edit,WebFetch,WebSearch,Bash(node:*)" \
   2>&1
 
 echo "[heartbeat] $(date -u '+%F %T') UTC : cycle terminé."
