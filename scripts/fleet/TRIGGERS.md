@@ -18,7 +18,10 @@ Ces déclencheurs s'exécutent dans la **session de canal authentifiée** (celle
 
 ## Planification — « chaque matin »
 
-Job récurrent armé dans la **session authentifiée** (CronCreate, id `a708a671`, ~08:07 Paris) : source 5 investisseurs par deal actif, matche, écrit dans Specter DB - Day, notifie Telegram.
+Job récurrent armé dans la **session authentifiée** (CronCreate, id `054c7716`, ~08:07 Paris). Routine du matin en 3 temps :
+- **A. Sourcing** : 5 investisseurs par deal actif → enrichis → écrits dans Specter DB - Day.
+- **B. Outreach drafts** : pour chaque nouveau contact, un **brouillon Gmail** dans la voix de Ghita (jamais envoyé), EN par défaut / FR pour les France-based, CC salomon@origins.fund.
+- **C. Notification** Telegram (récap par deal + nombre de brouillons en attente).
 
 Limites **assumées** (le job dépend de la session, car les connecteurs Specter/Attio n'existent que là) :
 - **Session-only + expiration 7 jours** : si la session redémarre ou après 7 jours, le job disparaît. Il faut le ré-armer.
