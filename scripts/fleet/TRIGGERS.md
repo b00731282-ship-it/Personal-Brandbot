@@ -16,7 +16,15 @@ Ces déclencheurs s'exécutent dans la **session de canal authentifiée** (celle
 
 **Nombre par défaut** : **5 nouveaux contacts par deal actif** de la liste Fundraising. Respecter le nombre demandé si l'utilisatrice en précise un autre.
 
-## Planification — « chaque matin »
+## Sourcing du matin — DURABLE (cron système)
+
+`scripts/morning_sourcing.sh` (cron système, `7 6,7 * * *` UTC, garde-fou 8h Paris). **Headless** via les clients API à clé (`scripts/specter.js` + `scripts/attio.js`) : survit aux redémarrages, ne dépend d'aucune session. Prompt : `scripts/morning_sourcing_prompt.md`.
+
+- **10 leads par deal matchable** (deals de Fundraising qui sont aussi options de `deal_shared` : Peec AI, LAP Coffee, NEURA).
+- **Backpressure** : ne source que si la liste `Specter DB - Day` a été **vidée d'au moins 50%** depuis le dernier run (baseline dans `data/outbound/list_baseline.json`). Sinon → notif « sauté, traite les leads existants ». Le script se re-seed son baseline après chaque run.
+- **Sourcing + CRM + notif seulement.** Les brouillons d'outreach ne sont PAS générés en headless (Gmail = session/OAuth). Ils restent à faire en session, ou attendent le wiring Gmail.
+
+## Planification (legacy in-session) — « chaque matin »
 
 Job récurrent armé dans la **session authentifiée** (CronCreate, id `054c7716`, ~08:07 Paris). Routine du matin en 3 temps :
 - **A. Sourcing** : 5 investisseurs par deal actif → enrichis → écrits dans Specter DB - Day.
