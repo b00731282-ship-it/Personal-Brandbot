@@ -9,3 +9,5 @@ drafts/
 node_modules/
 logs/
 logs/fleet/
+data/outbound/
+drafts/outreach/

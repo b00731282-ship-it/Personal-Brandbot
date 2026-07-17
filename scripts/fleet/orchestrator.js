@@ -31,6 +31,7 @@ function arg(name, def) {
 const CHAT = String(arg('chat', '6679204446'));
 const ONLY = arg('only', null);
 const NO_DELIVER = process.argv.includes('--no-deliver');
+const NO_JUDGE = process.argv.includes('--no-judge'); // panel de juges actif par défaut
 
 // Dossier de run horodaté hors git (le nom vient du système de fichiers, pas
 // de Date.now(), pour rester reproductible si relancé).
@@ -64,10 +65,19 @@ function notify(text, file) {
   const signals = JSON.parse(fs.readFileSync(signalsFile, 'utf8'));
   log(runDir, 'orchestrator', `veille : ${signals.signals.length} signaux`);
 
-  // 2. ARTICLE ---------------------------------------------------------------
+  // 2. PANEL DE JUGES — choisit l'angle/thèse le plus différenciant ----------
+  let chosen = null;
+  if (!NO_JUDGE) {
+    const judgeFile = p('judge.json');
+    const j = runAgentJson({ runDir, agent: 'judge', promptFile: 'judge.md', input: { signals }, outfile: judgeFile });
+    chosen = j.chosen || null;
+    log(runDir, 'orchestrator', `juges : thèse retenue « ${(chosen && chosen.thesis || '').slice(0, 70)}… »`);
+  }
+
+  // 3. ARTICLE ---------------------------------------------------------------
   const slug = `${signals.week || stamp.slice(0, 10)}-fleet`;
   const articleFile = path.join(draftsDir, `${slug}.md`);
-  runAgent({ runDir, agent: 'article', promptFile: 'article.md', input: { signals, outfile: articleFile }, outfile: articleFile });
+  runAgent({ runDir, agent: 'article', promptFile: 'article.md', input: { signals, chosen_thesis: chosen, outfile: articleFile }, outfile: articleFile });
 
   // 3. VÉRIFICATION ADVERSARIALE + révision éventuelle ------------------------
   const verdictFile = p('verdict.json');

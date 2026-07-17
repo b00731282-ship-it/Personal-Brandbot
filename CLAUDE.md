@@ -113,6 +113,15 @@ Charge une compétence uniquement quand elle est pertinente pour la demande.
 
 Important : charger une compétence ajoute des instructions de travail, mais ne crée pas de nouveaux outils. Tous les outils disponibles restent accessibles, qu'une compétence soit active ou non.
 
+## Architecture fleet (multi-agents)
+
+Ghitastar s'exécute comme une **fleet** orchestrée (voir `scripts/fleet/README.md`). Un orchestrateur (« famous investor ») pilote deux boucles :
+
+- **Inbound (contenu)**, headless-safe : sous-agents `veille` → `judge` (panel de juges, choix de la thèse) → `article` → `verify` (vérification adversariale + révision) → `linkedin` → livraison Substack/Telegram. Orchestré par `scripts/fleet/orchestrator.js`, chaque sous-agent est un `claude -p --strict-mcp-config` isolé.
+- **Outbound (relations)**, session authentifiée uniquement : `sourcing` (Specter/Attio, trouve family offices/angels/CEOs/fondateurs) et `outreach` (**rédige, n'envoie jamais** — miroir de « ne publie jamais »). Ne tourne pas en headless car les connecteurs claude.ai y sont absents.
+
+Garanties étendues : l'agent ne publie jamais (contenu) et n'envoie jamais (outreach) ; tout est brouillon validé par l'humaine.
+
 ## Heartbeat hebdomadaire
 
 Un cron système (crontab de l'utilisateur `agent` sur le VPS) lance `scripts/heartbeat.sh` chaque **vendredi à 8h heure de Paris** : veille des 7 derniers jours, article de la semaine (règles de CLAUDE.md), contrôle qualité, brouillon Substack, notification Telegram avec le lien d'édition. Le prompt exécuté est dans `scripts/heartbeat_prompt.md`. Les logs sont dans `logs/heartbeat.log`. Le brouillon n'est jamais publié : l'utilisateur relit et publie.
