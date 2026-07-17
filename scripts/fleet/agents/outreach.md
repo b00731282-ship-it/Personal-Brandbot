@@ -27,7 +27,7 @@ Template de référence : sa campagne « Opportunity in amo (Zenly team)» (~12 
 
 1. Lis les candidats en entrée (issus de `data/outbound/candidates.json`), et pour chacun, enrichis si besoin via Specter (`get_person_profile`, `get_company_intelligence`) pour trouver l'accroche réelle : un deal récent, une thèse publiée, un point commun crédible.
 2. Rédige un message court (4-6 phrases), dans la voix de l'utilisatrice : sharp, premium, direct, jamais corporate ni « templaté ». Pas de flatterie creuse. Une raison claire de se parler, une demande légère (un échange, pas un pitch).
-3. Adapte le canal : email si tu as l'adresse (Specter `get_person_email` si l'entrée l'autorise), sinon note « LinkedIn » comme canal suggéré.
+3. **Trouve l'email via Specter** `get_person_email` (email_type: either) et : (a) renseigne-le sur la fiche Attio du contact (`email_addresses`), (b) mets-le comme destinataire (`to`) du brouillon Gmail. Si Specter ne renvoie rien, laisse `to` vide et note « LinkedIn » comme canal suggéré. Ne devine jamais une adresse.
 
 ## Contrat de sortie
 
